@@ -19,18 +19,29 @@ const register = async (req, res) => {
 };
 
 const autenticate = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
 
-  const user = User.findOne({ email })
-  if(!user) {
-    const error = new Error('El usuario no existe')
-    return res.status(404).json({ message: error.message })
+  const user = User.findOne({ email });
+  if (!user) {
+    const error = new Error('El usuario no existe');
+    return res.status(404).json({ message: error.message });
   }
 
-  if(!user.confirm) {
-    const error = new Error('Tu cuenta no a sido confirmada')
-    return res.status(403).json({ message: error.message })
+  if (!user.confirm) {
+    const error = new Error('Tu cuenta no a sido confirmada');
+    return res.status(403).json({ message: error.message });
   }
+
+  if (!(await user.checkPassword(password))) {
+    const error = new Error('Contraseña incorrecta');
+    return res.status(403).json({ message: error.message });
+  }
+
+  return res.json({
+    _id: user._id,
+    name: user.name,
+    email: user.email
+  });
 };
 
 export { register, autenticate };
