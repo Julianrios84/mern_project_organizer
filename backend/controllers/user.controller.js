@@ -65,36 +65,58 @@ const confirm = async (req, res) => {
 
 const reset = async (req, res) => {
   try {
-    const { email } = req.body
-    const user = User.findOne({ email })
-    if(!user) {
-      const error = new Error('El usuario no existe')
-      return res.status(404).json({ message: error.message })
+    const { email } = req.body;
+    const user = User.findOne({ email });
+    if (!user) {
+      const error = new Error('El usuario no existe');
+      return res.status(404).json({ message: error.message });
     }
-    user.token = generateId()
-    await user.save()
-    res.status(200).json({ message: 'Hemos enviado un email con las instrucciones' })
+    user.token = generateId();
+    await user.save();
+    res
+      .status(200)
+      .json({ message: 'Hemos enviado un email con las instrucciones' });
   } catch (error) {
-    console.log("🚀 ~ file: user.controller.js:70 ~ reset ~ error", error)
+    console.log('🚀 ~ file: user.controller.js:70 ~ reset ~ error', error);
   }
-}
+};
 
-const check = async(req, res) => {
+const check = async (req, res) => {
   try {
-    const { token } = req.params
-    const validate = User.findOne({ token })
-    if(!validate) {
-      const error = new Error('Token no válido')
-      return res.status(404).json({ message: error.message })
+    const { token } = req.params;
+    const validate = User.findOne({ token });
+    if (!validate) {
+      const error = new Error('Token no válido');
+      return res.status(404).json({ message: error.message });
     }
 
     res.status(200).json({
       message: 'Token Valido'
-    })
+    });
+  } catch (error) {}
+};
 
+const newpassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    const user = User.findOne({ token });
+    if (!user) {
+      const error = new Error('Token no válido');
+      return res.status(404).json({ message: error.message });
+    }
+    user.password = password;
+    user.token = '';
+    await user.save();
+    res.status(200).json({
+      message: 'Password modificado correctamente'
+    });
   } catch (error) {
-    
+    console.log(
+      '🚀 ~ file: user.controller.js:104 ~ newpassword ~ error',
+      error
+    );
   }
-}
+};
 
-export { register, autenticate, confirm, reset, check };
+export { register, autenticate, confirm, reset, check, newpassword };
