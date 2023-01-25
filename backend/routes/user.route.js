@@ -1,8 +1,9 @@
 import express from "express";
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.send("Desde api")
-})
+import { register } from '../controllers/user.controller.js'
+
+router.post('/', register)
+
 
 export default router
