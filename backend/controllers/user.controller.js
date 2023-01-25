@@ -46,4 +46,21 @@ const autenticate = async (req, res) => {
   });
 };
 
-export { register, autenticate };
+const confirm = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const user = User.findOne({ token });
+    if (!user) {
+      const error = new Error('Token no valido');
+      return res.status(403).json({ message: error.message });
+    }
+    user.confirm = true;
+    user.token = '';
+    await user.save();
+    res.status(200).json({ message: 'Usuario confirmado correctamente' });
+  } catch (error) {
+    console.log('🚀 ~ file: user.controller.js:53 ~ confirm ~ error', error);
+  }
+};
+
+export { register, autenticate, confirm };
