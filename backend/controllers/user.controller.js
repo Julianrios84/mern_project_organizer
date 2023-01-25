@@ -1,5 +1,6 @@
 import User from '../models/user.model.js';
 import generateId from '../helpers/generateId.helper.js';
+import generateToken from '../helpers/generateToken.helper.js';
 
 const register = async (req, res) => {
   try {
@@ -40,7 +41,8 @@ const autenticate = async (req, res) => {
   return res.json({
     _id: user._id,
     name: user.name,
-    email: user.email
+    email: user.email,
+    token: generateToken({ id: user._id })
   });
 };
 
