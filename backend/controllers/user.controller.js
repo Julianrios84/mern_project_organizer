@@ -79,4 +79,17 @@ const reset = async (req, res) => {
   }
 }
 
-export { register, autenticate, confirm, reset };
+const check = async(req, res) => {
+  try {
+    const { token } = req.params
+    const validate = User.findOne({ token })
+    if(!validate) {
+      const error = new Error('Token no válido')
+      return res.status(404).json({ message: error.message })
+    }
+  } catch (error) {
+    
+  }
+}
+
+export { register, autenticate, confirm, reset, check };
