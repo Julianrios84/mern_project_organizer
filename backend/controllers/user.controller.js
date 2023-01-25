@@ -119,4 +119,9 @@ const newpassword = async (req, res) => {
   }
 };
 
-export { register, autenticate, confirm, reset, check, newpassword };
+const profile = async (req, res) => {
+  const { user } = req;
+  res.json(user);
+};
+
+export { register, autenticate, confirm, reset, check, newpassword, profile };
