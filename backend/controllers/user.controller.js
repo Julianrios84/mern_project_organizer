@@ -87,6 +87,11 @@ const check = async(req, res) => {
       const error = new Error('Token no válido')
       return res.status(404).json({ message: error.message })
     }
+
+    res.status(200).json({
+      message: 'Token Valido'
+    })
+
   } catch (error) {
     
   }
