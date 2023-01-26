@@ -1,4 +1,5 @@
 import Project from '../models/project.model.js';
+import Task from '../models/task.model.js';
 
 const getProjects = async (req, res) => {
   try {
@@ -35,7 +36,8 @@ const getProject = async (req, res) => {
       return res.status(401).json({ message: error.message });
     }
 
-    res.json(project);
+    const tasks = Task.find().where('project').equals(project._id);
+    res.json({project, tasks});
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -94,7 +96,6 @@ const addCollaboration = async (req, res) => {};
 
 const removeCollaboration = async (req, res) => {};
 
-const getTask = async (req, res) => {};
 
 export {
   getProjects,
@@ -104,5 +105,4 @@ export {
   removeProject,
   addCollaboration,
   removeCollaboration,
-  getTask
 };
