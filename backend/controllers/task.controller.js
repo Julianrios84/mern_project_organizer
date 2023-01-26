@@ -44,9 +44,54 @@ const getTask = async (req, res) => {
   }
 };
 
-const updateTask = async (req, res) => {};
+const updateTask = async (req, res) => {
+  try {
+    const { id } = req.params
+    const task = Task.findById(id).populate('project')
 
-const removeTask = async (req, res) => {};
+    if(!task) {
+      const error = new Error('Tarea no encontrada');
+      return res.status(404).json({ message: error.message });
+    }
+
+    if(task.project.create.toString() !== req.user._id.toString()) {
+      const error = new Error('Acción no válida');
+      return res.status(403).json({ message: error.message });
+    }
+
+    task.name = req.body.name || task.name;
+    task.description = req.body.description || task.description;
+    task.priority = req.body.priority || task.priority;
+    task.delivery = req.body.delivery || task.delivery;
+
+    const result = await task.save()
+    res.json(result)
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const removeTask = async (req, res) => {
+  try {
+    const { id } = req.params
+    const task = Task.findById(id).populate('project')
+
+    if(!task) {
+      const error = new Error('Tarea no encontrada');
+      return res.status(404).json({ message: error.message });
+    }
+
+    if(task.project.create.toString() !== req.user._id.toString()) {
+      const error = new Error('Acción no válida');
+      return res.status(403).json({ message: error.message });
+    }
+
+    task.deleteOne()
+    res.json({ message: 'Tarea eliminada' })
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 const changeStatus = async (req, res) => {};
 
