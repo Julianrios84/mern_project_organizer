@@ -41,7 +41,33 @@ const getProject = async (req, res) => {
   }
 };
 
-const updateProject = async (req, res) => {};
+const updateProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = Project.findById(id);
+
+    if (!project) {
+      const error = new Error('Proyecto no encontrado');
+      return res.status(404).json({ message: error.message });
+    }
+
+    if (project.creator.toString() !== req.user._id.toString()) {
+      const error = new Error('Acción no valida');
+      return res.status(401).json({ message: error.message });
+    }
+
+    project.name = req.body.name || project.name
+    project.description = req.body.description || project.description
+    project.delivery = req.body.delivery || project.delivery
+    project.client = req.body.client || project.client
+
+    const result = await project.save()
+    res.json(result)
+
+  } catch (error) {
+    return res.status(500).json({  message: error.message });
+  }
+};
 
 const removeProject = async (req, res) => {};
 
