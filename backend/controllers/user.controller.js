@@ -1,7 +1,7 @@
 import User from '../models/user.model.js';
 import generateId from '../helpers/generateId.helper.js';
 import generateToken from '../helpers/generateToken.helper.js';
-import registerEmail from '../helpers/email.helper.js';
+import { registerEmail, forgetPasswordEmail } from '../helpers/email.helper.js';
 
 const register = async (req, res) => {
   try {
@@ -19,7 +19,7 @@ const register = async (req, res) => {
       email: user.email,
       name: user.name,
       token: user.token
-    })
+    });
 
     res.json({
       message:
@@ -82,8 +82,16 @@ const reset = async (req, res) => {
       const error = new Error('El usuario no existe');
       return res.status(404).json({ message: error.message });
     }
+
     user.token = generateId();
     await user.save();
+
+    forgetPasswordEmail({
+      email: user.email,
+      name: user.name,
+      token: user.token
+    });
+
     res
       .status(200)
       .json({ message: 'Hemos enviado un email con las instrucciones' });
@@ -104,7 +112,9 @@ const check = async (req, res) => {
     res.status(200).json({
       message: 'Token Valido'
     });
-  } catch (error) {}
+  } catch (error) {
+  console.log("🚀 ~ file: user.controller.js:116 ~ check ~ error", error)
+  }
 };
 
 const newpassword = async (req, res) => {

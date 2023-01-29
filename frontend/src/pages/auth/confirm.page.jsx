@@ -7,13 +7,13 @@ const Confirm = () => {
   const [alert, setAlert] = useState({});
   const [accountConfirm, setAccountConfirm] = useState(false);
   const params = useParams();
-  const { id } = params;
+  const { token } = params;
 
   useEffect(() => {
     const confirmAccount = async () => {
       try {
         const { data } = await axios(
-          `${import.meta.env.VITE_BACKEND_URL}/api/user/confirm/${id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/user/confirm/${token}`
         );
         setAlert({
           message: data.message,
