@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import clientAxios from '../../../config/axios.config';
 import Alert from '../../../components/alert.component';
 
 const ForgetPassword = () => {
@@ -19,12 +19,9 @@ const ForgetPassword = () => {
     }
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/user/reset/password`,
-        {
-          email
-        }
-      );
+      const { data } = await clientAxios.post(`/user/reset/password`, {
+        email
+      });
       setAlert({
         message: data.message,
         error: false

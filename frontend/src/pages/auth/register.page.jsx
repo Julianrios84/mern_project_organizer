@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'
+import clientAxios from '../../config/axios.config'
 import Alert from '../../components/alert.component'
 
 const Register = () => {
@@ -57,7 +57,7 @@ const Register = () => {
 
   const createUser = async () => {
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
+      const { data } = await clientAxios.post(`/user`, {
         name: user.name, email: user.email, password: user.password
       })
       setAlert({
