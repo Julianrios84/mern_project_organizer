@@ -1,6 +1,7 @@
 import User from '../models/user.model.js';
 import generateId from '../helpers/generateId.helper.js';
 import generateToken from '../helpers/generateToken.helper.js';
+import registerEmail from '../helpers/email.helper.js';
 
 const register = async (req, res) => {
   try {
@@ -13,7 +14,17 @@ const register = async (req, res) => {
     const user = new User(req.body);
     user.token = generateId();
     await user.save();
-    res.json({ message: 'Usuario creado correctamente, revisa tu email para confirmar tu cuenta'});
+
+    registerEmail({
+      email: user.email,
+      name: user.name,
+      token: user.token
+    })
+
+    res.json({
+      message:
+        'Usuario creado correctamente, revisa tu email para confirmar tu cuenta'
+    });
   } catch (error) {
     console.log('🚀 ~ file: user.controller.js:8 ~ register ~ error', error);
   }
