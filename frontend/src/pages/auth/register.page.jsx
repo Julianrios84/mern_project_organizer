@@ -67,7 +67,7 @@ const Register = () => {
 
       <input
         type="submit"
-        value="Iniciar Sesión"
+        value="Registrarse"
         className="bg-sky-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
       />
     </form>
@@ -75,7 +75,7 @@ const Register = () => {
     <nav className="lg:flex lg:justify-between">
       <Link
         className="block text-center my-5 text-slate-500 text-sm"
-        to="/register"
+        to="/"
       >
         ¿Ya tienes una cuenta?, Inicia sesión
       </Link>
