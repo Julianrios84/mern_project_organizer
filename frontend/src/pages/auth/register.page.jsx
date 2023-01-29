@@ -34,6 +34,23 @@ const Register = () => {
       });
       return;
     }
+
+    if(user.password !== user.confirm) {
+      setAlert({
+        message: 'Los password no son iguales',
+        error: true
+      })
+      return;
+    }
+
+    if(user.password.length < 6) {
+      setAlert({
+        message: 'La contraseña es muy corta, agrega minimo 6 caracteres'
+      })
+      return;
+    }
+
+    setAlert({})
   }
 
   const { message } = alert
