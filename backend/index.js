@@ -17,7 +17,7 @@ dotenv.config()
 database();
 
 // Configuracion CORS
-const whiteList = ['http://localhost:3000']
+const whiteList = [process.env.CORS_ORIGINS]
 
 const corsOptions = {
   origin: function(origin, callback) {

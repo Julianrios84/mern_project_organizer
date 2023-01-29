@@ -50,7 +50,6 @@ const Register = () => {
       })
       return;
     }
-
     setAlert({})
     await createUser()
   }
@@ -58,13 +57,24 @@ const Register = () => {
 
   const createUser = async () => {
     try {
-      const { data } = await axios.post('http://localhost:4000/api/user')
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
+        name: user.name, email: user.email, password: user.password
+      })
       setAlert({
         message: data.message,
         error: false
       })
+      setUser({
+        name: '',
+        email: '',
+        password: '',
+        confirm: ''
+      });
     } catch (error) {
-      console.log("🚀 ~ file: register.page.jsx:62 ~ createUser ~ error", error)
+      setAlert({
+        message: error.response.data.message,
+        error: true
+      })
     }
   }
 
