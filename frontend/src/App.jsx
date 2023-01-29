@@ -11,7 +11,8 @@ import Confirm from './pages/auth/confirm.page';
 import ForgetPassword from './pages/auth/password/forget.page';
 import ResetPassword from './pages/auth/password/reset.page';
 
-import Projects from './pages/projects.page'
+import Projects from './pages/project/projects.page'
+import CreateProject from './pages/project/creat.page';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           </Route>
           <Route path='/projects' element={<Protected />}>
             <Route index element={<Projects />} />
+            <Route path="create" element={<CreateProject />} />
           </Route>
         </Routes>
       </AuthProvider>
