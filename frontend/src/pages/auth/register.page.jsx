@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 import Alert from '../../components/alert.component'
 
 const Register = () => {
@@ -16,7 +17,7 @@ const Register = () => {
     setUser({ ...user, [e.target.name]:e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -51,9 +52,19 @@ const Register = () => {
     }
 
     setAlert({})
+    await createUser()
   }
 
-  const { message } = alert
+
+  const createUser = async () => {
+    try {
+      const response = await axios.post('http://localhost:4000/api/user')
+      
+    } catch (error) {
+      console.log("🚀 ~ file: register.page.jsx:62 ~ createUser ~ error", error)
+    }
+  }
+
 
   return (
     <>
@@ -62,7 +73,7 @@ const Register = () => {
         <span className="text-slate-700 font-sansita">projectos</span>
       </h1>
 
-      { message && <Alert alert={alert} />}
+      { alert && <Alert alert={alert} />}
 
       <form className="my-10 bg-white shadow rounded-lg p-10" onSubmit={handleSubmit}>
         <div className="my-5">
