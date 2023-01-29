@@ -5,7 +5,8 @@ import Alert from '../../../components/alert.component';
 
 const ResetPassword = () => {
   const [alert, setAlert] = useState({});
-  const [tokenValid, setTokenValid] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordModifed, setPasswordModifed] = useState(false);
   const params = useParams();
   const { token } = params;
 
@@ -15,7 +16,7 @@ const ResetPassword = () => {
         await axios(
           `${import.meta.env.VITE_BACKEND_URL}/api/reset/password/${token}`
         );
-        setTokenValid(true);
+        setPasswordModifed(true);
       } catch (error) {
         setAlert({
           message: error.response.data.message,
@@ -27,6 +28,37 @@ const ResetPassword = () => {
     checkToken();
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password.length < 6) {
+      setAlert({
+        message: 'La contraseña debe ser minimo de 6 caracteres',
+        error: true
+      });
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/reset/password/${token}`,
+        {
+          password
+        }
+      );
+      setAlert({
+        message: data.message,
+        error: false
+      });
+      setPassword('');
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: true
+      });
+    }
+  };
+
   return (
     <>
       <h1 className="text-sky-600 font-black text-6xl font-sansita">
@@ -37,7 +69,10 @@ const ResetPassword = () => {
       {alert && <Alert alert={alert} />}
 
       {tokenValid && (
-        <form className="my-10 bg-white shadow rounded-lg p-10">
+        <form
+          className="my-10 bg-white shadow rounded-lg p-10"
+          onSubmit={handleSubmit}
+        >
           <div className="my-5">
             <label
               className="capitalize text-gray-600 block text-xl font-bold"
@@ -50,6 +85,8 @@ const ResetPassword = () => {
               type="password"
               placeholder="Contaseña"
               className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -59,6 +96,12 @@ const ResetPassword = () => {
             className="bg-sky-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
           />
         </form>
+      )}
+
+      {passwordModifed && (
+        <Link className="block text-center my-5 text-slate-500 text-sm" to="/">
+          Inicia sesión
+        </Link>
       )}
     </>
   );
