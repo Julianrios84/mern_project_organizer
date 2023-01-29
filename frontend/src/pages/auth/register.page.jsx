@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Alert from '../../components/alert.component'
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -9,9 +10,33 @@ const Register = () => {
     confirm: ''
   });
 
+  const [alert, setAlert] = useState({});
+
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]:e.target.value });
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      [
+        user.pet,
+        user.owner,
+        user.email,
+        user.admission,
+        user.symptom,
+      ].includes('')
+    ) {
+      setAlert({
+        message: 'Todos los campose son obligatorios.',
+        error: true
+      });
+      return;
+    }
+  }
+
+  const { message } = alert
 
   return (
     <>
@@ -19,7 +44,10 @@ const Register = () => {
         Crea tu cuenta y administra tus {''}
         <span className="text-slate-700 font-sansita">projectos</span>
       </h1>
-      <form className="my-10 bg-white shadow rounded-lg p-10">
+
+      { message && <Alert alert={alert} />}
+
+      <form className="my-10 bg-white shadow rounded-lg p-10" onSubmit={handleSubmit}>
         <div className="my-5">
           <label
             className="capitalize text-gray-600 block text-xl font-bold"
