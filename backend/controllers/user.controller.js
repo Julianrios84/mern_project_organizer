@@ -12,8 +12,8 @@ const register = async (req, res) => {
     }
     const user = new User(req.body);
     user.token = generateId();
-    const result = await user.save();
-    res.json(result);
+    await user.save();
+    res.json({ message: 'Usuario creado correctamente, revisa tu email para confirmar tu cuenta'});
   } catch (error) {
     console.log('🚀 ~ file: user.controller.js:8 ~ register ~ error', error);
   }

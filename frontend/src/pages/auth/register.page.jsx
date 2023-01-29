@@ -58,8 +58,11 @@ const Register = () => {
 
   const createUser = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/user')
-      
+      const { data } = await axios.post('http://localhost:4000/api/user')
+      setAlert({
+        message: data.message,
+        error: false
+      })
     } catch (error) {
       console.log("🚀 ~ file: register.page.jsx:62 ~ createUser ~ error", error)
     }

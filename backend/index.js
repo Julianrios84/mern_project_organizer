@@ -1,5 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import cors from 'cors'
 import database from './config/db.js'
 import userRoutes from './routes/user.route.js'
 import projectRoutes from './routes/project.route.js'
@@ -12,7 +13,25 @@ app.use(express.json())
 
 dotenv.config()
 
+// Base de datos
 database();
+
+// Configuracion CORS
+const whiteList = ['http://localhost:3000']
+
+const corsOptions = {
+  origin: function(origin, callback) {
+    if(whiteList.includes(origin)){
+      // Origenes autorizados
+      callback(null, true)
+    }else {
+      // Origenes no autorizados
+      callback(new Error('Origen no autorizado'))
+    }
+  }
+}
+
+app.use(cors(corsOptions))
 
 // Routing
 app.use('/api/users', userRoutes)
