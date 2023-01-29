@@ -12,7 +12,7 @@ const Confirm = () => {
   useEffect(() => {
     const confirmAccount = async () => {
       try {
-        const { data } = await clientAxios(`/user/confirm/${token}`);
+        const { data } = await clientAxios.get(`/user/confirm/${token}`);
         setAlert({
           message: data.message,
           error: false
@@ -36,7 +36,7 @@ const Confirm = () => {
         <span className="text-slate-700 font-sansita">projectos</span>
       </h1>
       <div className="mt-20 md:mt-10 shadow-lg px-5 py-10 rounded-xl bg-white">
-        {alert && <Alert alert={alert} />}
+        {alert.message && <Alert alert={alert} />}
 
         {accountConfirm && (
           <Link

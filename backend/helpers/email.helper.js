@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export const registerEmail = (data) => {
+export const registerEmail = async (data) => {
   const { email, name, token } = data
   const transport = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -27,7 +27,7 @@ export const registerEmail = (data) => {
 }
 
 
-export const forgetPasswordEmail = (data) => {
+export const forgetPasswordEmail = async (data) => {
   const { email, name, token } = data
   const transport = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,

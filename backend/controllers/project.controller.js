@@ -3,7 +3,7 @@ import Task from '../models/task.model.js';
 
 const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find().where('creator').equals(req.user);
+    let projects = await Promise.resolve(Project.find().where('creator').equals(req.user))
     es.json(projects);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -24,7 +24,7 @@ const createProject = async (req, res) => {
 const getProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = Project.findById(id);
+    const project = await Promise.resolve(Project.findById(id));
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');
@@ -36,7 +36,7 @@ const getProject = async (req, res) => {
       return res.status(401).json({ message: error.message });
     }
 
-    const tasks = Task.find().where('project').equals(project._id);
+    const tasks = await Promise.resolve(Task.find().where('project').equals(project._id));
     res.json({project, tasks});
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -46,7 +46,7 @@ const getProject = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = Project.findById(id);
+    const project = await Promise.resolve(Project.findById(id));
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');
@@ -73,7 +73,7 @@ const updateProject = async (req, res) => {
 const removeProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = Project.findById(id);
+    const project = await Promise.resolve(Project.findById(id));
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');

@@ -34,9 +34,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // Routing
-app.use('/api/users', userRoutes)
-app.use('/api/projects', projectRoutes)
-app.use('/api/tasks', taskRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/project', projectRoutes)
+app.use('/api/task', taskRoutes)
 
 app.listen(port, () => {
   console.log(`Server running in port ${port}`)

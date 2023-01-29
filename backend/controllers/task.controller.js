@@ -1,10 +1,11 @@
+import { Promise } from 'mongoose';
 import Project from '../models/project.model.js';
 import Task from '../models/task.model.js';
 
 const addTask = async (req, res) => {
   try {
     const { project } = req.body;
-    const existProject = Project.findById(project);
+    const existProject = await Promise.resolve(Project.findById(project));
 
     if (!existProject) {
       const error = new Error('El Proyecto no existe');
@@ -26,7 +27,7 @@ const addTask = async (req, res) => {
 const getTask = async (req, res) => {
   try {
     const { id } = req.params
-    const task = Task.findById(id).populate('project')
+    const task = await Promise.resolve(Task.findById(id).populate('project'))
 
     if(!task) {
       const error = new Error('Tarea no encontrada');
@@ -47,7 +48,7 @@ const getTask = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params
-    const task = Task.findById(id).populate('project')
+    const task = await Promise.resolve(Task.findById(id).populate('project'))
 
     if(!task) {
       const error = new Error('Tarea no encontrada');
@@ -74,7 +75,7 @@ const updateTask = async (req, res) => {
 const removeTask = async (req, res) => {
   try {
     const { id } = req.params
-    const task = Task.findById(id).populate('project')
+    const task = await Promise.resolve(Task.findById(id).populate('project'))
 
     if(!task) {
       const error = new Error('Tarea no encontrada');

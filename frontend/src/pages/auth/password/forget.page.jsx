@@ -42,7 +42,7 @@ const ForgetPassword = () => {
         <span className="text-slate-700 font-sansita">projectos</span>
       </h1>
 
-      {alert && <Alert alert={alert} />}
+      {alert.message && <Alert alert={alert} />}
 
       <form
         className="my-10 bg-white shadow rounded-lg p-10"

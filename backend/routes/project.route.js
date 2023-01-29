@@ -7,7 +7,7 @@ import {
   updateProject,
   removeProject,
   addCollaboration,
-  removeCollaboration,
+  removeCollaboration
 } from '../controllers/project.controller.js';
 
 import checkAuth from '../middlewares/check.auth.middleware.js';
@@ -22,8 +22,7 @@ router
   .put(checkAuth, updateProject)
   .delete(checkAuth, removeProject);
 
-
-route
+router
   .route('/collaboration/:id')
   .post(checkAuth, addCollaboration)
   .delete(checkAuth, removeCollaboration);

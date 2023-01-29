@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Alert from '../../../components/alert.component';
 import clientAxios from '../../../config/axios.config';
 
 const ResetPassword = () => {
   const [alert, setAlert] = useState({});
   const [password, setPassword] = useState('');
+  const [tokenValid, setTokenValid] = useState(false);
   const [passwordModifed, setPasswordModifed] = useState(false);
   const params = useParams();
   const { token } = params;
@@ -13,8 +14,8 @@ const ResetPassword = () => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        await clientAxios(`/reset/password/${token}`);
-        setPasswordModifed(true);
+        await clientAxios.get(`user/reset/password/${token}`);
+        setTokenValid(true);
       } catch (error) {
         setAlert({
           message: error.response.data.message,
@@ -30,6 +31,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (password.length < 6) {
+      setPasswordModifed(false)
       setAlert({
         message: 'La contraseña debe ser minimo de 6 caracteres',
         error: true
@@ -37,8 +39,10 @@ const ResetPassword = () => {
       return;
     }
 
+    setPasswordModifed(true)
+
     try {
-      const { data } = await clientAxios.post(`/reset/password/${token}`, {
+      const { data } = await clientAxios.post(`user/reset/password/${token}`, {
         password
       });
       setAlert({
@@ -61,7 +65,7 @@ const ResetPassword = () => {
         <span className="text-slate-700 font-sansita">projectos</span>
       </h1>
 
-      {alert && <Alert alert={alert} />}
+      {alert.message && <Alert alert={alert} />}
 
       {tokenValid && (
         <form
