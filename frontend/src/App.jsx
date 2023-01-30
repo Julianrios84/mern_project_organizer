@@ -15,6 +15,7 @@ import ResetPassword from './pages/auth/password/reset.page';
 import Projects from './pages/project/projects.page';
 import CreateProject from './pages/project/create.page';
 import Project from './pages/project/project.page';
+import UpdateProject from './pages/project/update.page';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route index element={<Projects />} />
               <Route path="create" element={<CreateProject />} />
               <Route path=":id" element={<Project />} />
+              <Route path="edit/:id" element={<UpdateProject />} />
             </Route>
           </Routes>
         </ProjectProvider>
