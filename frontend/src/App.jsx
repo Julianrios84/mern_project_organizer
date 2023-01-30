@@ -14,6 +14,7 @@ import ResetPassword from './pages/auth/password/reset.page';
 
 import Projects from './pages/project/projects.page';
 import CreateProject from './pages/project/create.page';
+import Project from './pages/project/project.page';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/projects" element={<Protected />}>
               <Route index element={<Projects />} />
               <Route path="create" element={<CreateProject />} />
+              <Route path=":id" element={<Project />} />
             </Route>
           </Routes>
         </ProjectProvider>
