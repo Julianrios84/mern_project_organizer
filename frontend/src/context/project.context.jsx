@@ -7,28 +7,29 @@ const ProjectContext = createContext();
 const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [alert, setAlert] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  useEffect( () => {
+  useEffect(() => {
     const getProjects = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token');
         const config = {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           }
-        }; 
+        };
         const { data } = await clientAxios('/project', config);
-        setProjects(data)
+        setProjects(data);
       } catch (error) {
-        console.log("🚀 ~ file: project.context.jsx:25 ~ getProjects ~ error", error)
-        
-      } 
-    }
-     getProjects()
-  }, [])
-
+        console.log(
+          '🚀 ~ file: project.context.jsx:25 ~ getProjects ~ error',
+          error
+        );
+      }
+    };
+    getProjects();
+  }, []);
 
   const showAlert = (data) => {
     setAlert(data);
@@ -39,28 +40,29 @@ const ProjectProvider = ({ children }) => {
 
   const submitProject = async (project) => {
     try {
-      const token = localStorage.getItem('token')
-      if(!token) return
+      const token = localStorage.getItem('token');
+      if (!token) return;
       const config = {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         }
-      }; 
-      await clientAxios.post('/project', project, config);
+      };
+      const { data } = await clientAxios.post('/project', project, config);
+      setProjects([...projects, data]);
       setAlert({
         message: 'Proyecto creado correctamente.',
         error: false
-      })
+      });
       setTimeout(() => {
-          setAlert({})
-          navigate('/projects')
+        setAlert({});
+        navigate('/projects');
       }, 2000);
     } catch (error) {
       setAlert({
         message: error.response.data.message,
         error: false
-      })
+      });
     }
   };
 
