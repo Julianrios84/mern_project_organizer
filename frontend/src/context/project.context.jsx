@@ -50,16 +50,18 @@ const ProjectProvider = ({ children }) => {
           Authorization: `Bearer ${token}`
         }
       };
-      const { data } = await clientAxios.post('/project', project, config);
-      setProjects([...projects, data]);
-      setAlert({
-        message: 'Proyecto creado correctamente.',
-        error: false
-      });
+
+      if(project.id !== '') {
+        await updateProject(project, config)
+      }else {
+       await createProject(project, config)
+      }
+
+      
       setTimeout(() => {
         setAlert({});
         navigate('/projects');
-      }, 2000);
+      }, 1000);
     } catch (error) {
       setAlert({
         message: error.response.data.message,
@@ -67,6 +69,25 @@ const ProjectProvider = ({ children }) => {
       });
     }
   };
+
+  const createProject = async (project, config) => {
+    const { data } = await clientAxios.post('/project', project, config);
+    setProjects([...projects, data]);
+    setAlert({
+      message: 'Proyecto creado correctamente.',
+      error: false
+    });
+  }
+
+  const updateProject = async (project, config) => {
+    const { data } = await clientAxios.put(`/project/${project.id}`, project, config);
+    const updatedProjects = projects.map(state => state._id === data._id ? data : state);
+    setProjects(updatedProjects)
+    setAlert({
+      message: 'Proyecto actualizado correctamente.',
+      error: false
+    });
+  }
 
   const getProject = async (id) => {
     try {
