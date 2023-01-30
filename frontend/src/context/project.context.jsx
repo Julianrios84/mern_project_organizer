@@ -9,6 +9,26 @@ const ProjectProvider = ({ children }) => {
   const [alert, setAlert] = useState(false);
   const navigate = useNavigate()
 
+  useEffect( () => {
+    const getProjects = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }; 
+        const { data } = await clientAxios('/project', config);
+        setProjects(data)
+      } catch (error) {
+        console.log("🚀 ~ file: project.context.jsx:25 ~ getProjects ~ error", error)
+        
+      } 
+    }
+     getProjects()
+  }, [])
+
 
   const showAlert = (data) => {
     setAlert(data);

@@ -4,7 +4,7 @@ import Task from '../models/task.model.js';
 const getProjects = async (req, res) => {
   try {
     let projects = await Promise.resolve(Project.find().where('creator').equals(req.user))
-    es.json(projects);
+    res.json(projects);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
