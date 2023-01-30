@@ -6,7 +6,9 @@ const ProjectContext = createContext();
 
 const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
+  const [project, setProject] = useState({});
   const [alert, setAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +70,7 @@ const ProjectProvider = ({ children }) => {
 
   const getProject = async (id) => {
     try {
+      setLoading(true)
       const token = localStorage.getItem('token');
       if (!token) return;
       const config = {
@@ -77,18 +80,20 @@ const ProjectProvider = ({ children }) => {
         }
       };
       const { data } = await clientAxios.get(`/project/${id}`, config);
-      console.log("🚀 ~ file: project.context.jsx:81 ~ getProject ~ data", data)
+      setProject(data)
     } catch (error) {
       setAlert({
         message: error.response.data.message,
         error: false
       });
+    } finally {
+      setLoading(false)
     }
   }
   
   return (
     <ProjectContext.Provider
-      value={{ projects, alert, showAlert, submitProject, getProject }}
+      value={{ projects, project, alert, loading, showAlert, submitProject, getProject }}
     >
       {children}
     </ProjectContext.Provider>
