@@ -66,9 +66,29 @@ const ProjectProvider = ({ children }) => {
     }
   };
 
+  const getProject = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      };
+      const { data } = await clientAxios.get(`/project/${id}`, config);
+      console.log("🚀 ~ file: project.context.jsx:81 ~ getProject ~ data", data)
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: false
+      });
+    }
+  }
+  
   return (
     <ProjectContext.Provider
-      value={{ projects, alert, showAlert, submitProject }}
+      value={{ projects, alert, showAlert, submitProject, getProject }}
     >
       {children}
     </ProjectContext.Provider>

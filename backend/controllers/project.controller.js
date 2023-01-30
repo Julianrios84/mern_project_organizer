@@ -36,8 +36,7 @@ const getProject = async (req, res) => {
       return res.status(401).json({ message: error.message });
     }
 
-    const tasks = await Promise.resolve(Task.find().where('project').equals(project._id));
-    res.json({project, tasks});
+    res.json(project);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
