@@ -1,26 +1,55 @@
 import { useState, useEffect, createContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import clientAxios from '../config/axios.config';
 
 const ProjectContext = createContext();
 
 const ProjectProvider = ({ children }) => {
-
   const [projects, setProjects] = useState([]);
   const [alert, setAlert] = useState(false);
+  const navigate = useNavigate()
+
 
   const showAlert = (data) => {
-    setAlert(data)
+    setAlert(data);
     setTimeout(() => {
-      setAlert({})
+      setAlert({});
     }, 5000);
-  }
+  };
 
   const submitProject = async (project) => {
-    console.log(project)
-  }
+    try {
+      const token = localStorage.getItem('token')
+      if(!token) return
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }; 
+      await clientAxios.post('/project', project, config);
+      setAlert({
+        message: 'Proyecto creado correctamente.',
+        error: false
+      })
+      setTimeout(() => {
+          setAlert({})
+          navigate('/projects')
+      }, 2000);
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: false
+      })
+    }
+  };
 
   return (
-    <ProjectContext.Provider value={{projects, alert, showAlert, submitProject}}>{children}</ProjectContext.Provider>
+    <ProjectContext.Provider
+      value={{ projects, alert, showAlert, submitProject }}
+    >
+      {children}
+    </ProjectContext.Provider>
   );
 };
 

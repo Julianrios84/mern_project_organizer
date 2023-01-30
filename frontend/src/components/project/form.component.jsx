@@ -27,7 +27,13 @@ const FormProject = () => {
       return;
     }
 
-    submitProject(project)
+    await submitProject(project)
+    setProject({
+      name: '',
+      description: '',
+      delivery: '',
+      client: ''
+    })
   }
 
   return (
