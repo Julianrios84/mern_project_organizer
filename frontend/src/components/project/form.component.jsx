@@ -5,8 +5,9 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
 const FormProject = () => {
-  const [projectId, setProjectId] = useState(null)
+  // const [projectId, setProjectId] = useState(null)
   const [project, setProject] = useState({
+    id: '',
     name: '',
     description: '',
     delivery: '',
@@ -18,8 +19,9 @@ const FormProject = () => {
 
   useEffect(() => {
     if(params.id) {
-      setProjectId(update._id)
+      // setProjectId(update._id)
       setProject({
+        id: update._id,
         name: update.name,
         description: update.description,
         delivery: update.delivery?.split('T')[0],
@@ -45,6 +47,7 @@ const FormProject = () => {
 
     await submitProject(project)
     setProject({
+      id: '',
       name: '',
       description: '',
       delivery: '',
@@ -120,7 +123,7 @@ const FormProject = () => {
 
       <input
         type="submit"
-        value={projectId ? 'Actualizar' : 'Crear'}
+        value={project.id ? 'Actualizar' : 'Crear'}
         className="bg-sky-600 w-full p-3 uppercase font-bold text-white rounded cursor-pointer hover:bg-sky-700 transition-colors"
       />
     </form>
