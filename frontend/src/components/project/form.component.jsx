@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import useProject from '../../hooks/project.hook';
+import Alert from '../../components/alert.component'
 
 const FormProject = () => {
   const [project, setProject] = useState({
@@ -8,14 +10,31 @@ const FormProject = () => {
     client: ''
   });
 
-  const [alert, setAlert] = useState({});
+  const { showAlert, alert, submitProject } = useProject();
 
   const handleChange = (e) => {
-    setUser({ ...createProject, [e.target.name]: e.target.value });
+    setProject({ ...project, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if([project.name, project.description, project.delivery, project.client].includes('')) {
+      showAlert({
+        message: 'Todos los campos son obligatorios.',
+        error: true
+      })
+      return;
+    }
+
+    submitProject(project)
+  }
+
   return (
-    <form className="bg-white py-10 px-5 md:w-1/2 rounded-lg shadow">
+    <form className="bg-white py-10 px-5 md:w-1/2 rounded-lg shadow" onSubmit={handleSubmit}>
+
+      {alert.message && <Alert alert={alert} />}
+
       <div className="mb-5">
         <label htmlFor="name" className="text-gray-700 font-bold text-sm">
           Nombre proyecto

@@ -6,9 +6,21 @@ const ProjectContext = createContext();
 const ProjectProvider = ({ children }) => {
 
   const [projects, setProjects] = useState([]);
+  const [alert, setAlert] = useState(false);
+
+  const showAlert = (data) => {
+    setAlert(data)
+    setTimeout(() => {
+      setAlert({})
+    }, 5000);
+  }
+
+  const submitProject = async (project) => {
+    console.log(project)
+  }
 
   return (
-    <ProjectContext.Provider value={{projects}}>{children}</ProjectContext.Provider>
+    <ProjectContext.Provider value={{projects, alert, showAlert, submitProject}}>{children}</ProjectContext.Provider>
   );
 };
 
