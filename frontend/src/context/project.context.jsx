@@ -4,8 +4,11 @@ import clientAxios from '../config/axios.config';
 const ProjectContext = createContext();
 
 const ProjectProvider = ({ children }) => {
+
+  const [projects, setProjects] = useState([]);
+
   return (
-    <ProjectContext.Provider value={{}}>{children}</ProjectContext.Provider>
+    <ProjectContext.Provider value={{projects}}>{children}</ProjectContext.Provider>
   );
 };
 

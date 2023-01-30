@@ -13,7 +13,7 @@ import ForgetPassword from './pages/auth/password/forget.page';
 import ResetPassword from './pages/auth/password/reset.page';
 
 import Projects from './pages/project/projects.page';
-import CreateProject from './pages/project/creat.page';
+import CreateProject from './pages/project/create.page';
 
 function App() {
   return (
