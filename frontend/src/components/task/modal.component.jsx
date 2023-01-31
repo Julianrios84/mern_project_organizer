@@ -6,15 +6,23 @@ import { useParams } from 'react-router-dom';
 
 const Priorities = [
   {
-    key: 'Short',
+    key: 1,
+    value: null,
+    name: '--- Seleccione ---'
+  },
+  {
+    key: 2,
+    value: 'Short',
     name: 'Baja'
   },
   {
-    key: 'Medium',
+    key: 3,
+    value: 'Medium',
     name: 'Media'
   },
   {
-    key: 'High',
+    key: 4,
+    value: 'High',
     name: 'Alta'
   }
 ];
@@ -27,29 +35,68 @@ const ModalTask = () => {
     priority: '',
     delivery: '',
     project: ''
-  }); 
+  });
 
-  const params = useParams()
-  const { modalTask, handleModalTask, showAlert, alert, submitTask } = useProject();
+  const params = useParams();
+  const {
+    modalTask,
+    handleModalTask,
+    showAlert,
+    alert,
+    submitTask,
+    task: update
+  } = useProject();
+
+  useEffect(() => {
+    if (update?._id) {
+      setTask({
+        id: update._id,
+        name: update.name,
+        description: update.description,
+        priority: update.priority,
+        delivery: update.delivery?.split('T')[0],
+        project: update.project
+      });
+      return;
+    }
+    setTask({
+      id: '',
+      name: '',
+      description: '',
+      priority: '',
+      delivery: '',
+      project: ''
+    });
+  }, [update]);
 
   const handleChange = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if([task.name, task.description, task.priority, task.delivery].includes('')) {
+    if (
+      [task.name, task.description, task.priority, task.delivery].includes('')
+    ) {
       showAlert({
         message: 'Todos los campos son obligatorios',
         error: true
-      })
+      });
       return;
     }
 
     task.project = params.id;
-    await submitTask(task)
-  }
+    await submitTask(task);
+    setTask({
+      id: '',
+      name: '',
+      description: '',
+      priority: '',
+      delivery: '',
+      project: ''
+    });
+  };
 
   return (
     <Transition.Root show={modalTask} as={Fragment}>
@@ -117,7 +164,7 @@ const ModalTask = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Crear tarea
+                    {task.id ? 'Actualizar tarea' : 'Crear tarea'}
                   </Dialog.Title>
 
                   {alert.message && <Alert alert={alert} />}
@@ -190,7 +237,7 @@ const ModalTask = () => {
                         onChange={(e) => handleChange(e)}
                       >
                         {Priorities.map((priority) => (
-                          <option key={priority.key} value={priority.key}>
+                          <option key={priority.key} value={priority.value}>
                             {priority.name}
                           </option>
                         ))}
@@ -200,7 +247,7 @@ const ModalTask = () => {
                     <input
                       type="submit"
                       className="bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm"
-                      value="Crear"
+                      value={task.id ? 'Actualizar' : 'Crear'}
                     />
                   </form>
                 </div>

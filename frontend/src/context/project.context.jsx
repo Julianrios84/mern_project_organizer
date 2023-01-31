@@ -9,9 +9,8 @@ const ProjectProvider = ({ children }) => {
   const [project, setProject] = useState({});
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [modalTask, setModalTask] = useState(false)
-
+  const [task, setTask] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -148,6 +147,7 @@ const ProjectProvider = ({ children }) => {
 
   const handleModalTask = () => {
     setModalTask(!modalTask)
+    setTask({})
   }
 
   const submitTask = async (task) => {
@@ -162,7 +162,7 @@ const ProjectProvider = ({ children }) => {
       };
 
       if(task.id !== '') {
-        // await updateProject(project, config)
+       await updateTask(task, config)
       }else {
        await createTask(task, config)
       }
@@ -181,16 +181,31 @@ const ProjectProvider = ({ children }) => {
 
   const createTask = async (task, config) => {
     const { data } = await clientAxios.post('/task', task, config);
-    // setProjects([...projects, data]);
+    const updateProject = { ...project }
+    updateProject.tasks = [...project.tasks, data]
+    setProject(updateProject);
     setAlert({
       message: 'Tarea creado correctamente.',
       error: false
     });
   }
+
+  const updateTask = async (task, config) => {
+    const { data } = await clientAxios.put(`/task/${project.id}`, task, config);
+    setAlert({
+      message: 'Tarea actualizada correctamente.',
+      error: false
+    });
+  }
+
+  const handleUpdateTask = async task => {
+    setTask(task)
+    setModalTask(true)
+  }
   
   return (
     <ProjectContext.Provider
-      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject, modalTask, handleModalTask, submitTask }}
+      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject, modalTask, handleModalTask, submitTask, handleUpdateTask, task }}
     >
       {children}
     </ProjectContext.Provider>
