@@ -169,7 +169,7 @@ const ProjectProvider = ({ children }) => {
       
       setTimeout(() => {
         setAlert({});
-        modalTask(false)
+        setModalTask(false)
       }, 1000);
     } catch (error) {
       setAlert({
@@ -180,7 +180,7 @@ const ProjectProvider = ({ children }) => {
   }
 
   const createTask = async (task, config) => {
-    const { data } = await clientAxios.post('/tassk', task, config);
+    const { data } = await clientAxios.post('/task', task, config);
     // setProjects([...projects, data]);
     setAlert({
       message: 'Tarea creado correctamente.',

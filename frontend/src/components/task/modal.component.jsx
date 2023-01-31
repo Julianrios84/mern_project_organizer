@@ -21,6 +21,7 @@ const Priorities = [
 
 const ModalTask = () => {
   const [task, setTask] = useState({
+    id: '',
     name: '',
     description: '',
     priority: '',
