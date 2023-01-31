@@ -5,6 +5,7 @@ import useProject from '../../hooks/project.hook';
 
 const Project = () => {
   const params = useParams();
+
   const { getProject, project, loading, handleModalTask } = useProject();
 
   useEffect(() => {
