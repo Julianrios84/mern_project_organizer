@@ -36,7 +36,7 @@ const getTask = async (req, res) => {
       return res.status(404).json({ message: error.message });
     }
 
-    if (task.project.create.toString() !== req.user._id.toString()) {
+    if (task.project.creator.toString() !== req.user._id.toString()) {
       const error = new Error('Acción no válida');
       return res.status(401).json({ message: error.message });
     }
@@ -56,8 +56,8 @@ const updateTask = async (req, res) => {
       const error = new Error('Tarea no encontrada');
       return res.status(404).json({ message: error.message });
     }
-
-    if (task.project.create.toString() !== req.user._id.toString()) {
+    console.log(task)
+    if (task.project.creator.toString() !== req.user._id.toString()) {
       const error = new Error('Acción no válida');
       return res.status(401).json({ message: error.message });
     }
@@ -83,7 +83,7 @@ const removeTask = async (req, res) => {
       return res.status(404).json({ message: error.message });
     }
 
-    if (task.project.create.toString() !== req.user._id.toString()) {
+    if (task.project.creator.toString() !== req.user._id.toString()) {
       const error = new Error('Acción no válida');
       return res.status(401).json({ message: error.message });
     }

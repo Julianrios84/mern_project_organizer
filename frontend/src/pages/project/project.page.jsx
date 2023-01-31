@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ModalTask from '../../components/task/modal.component';
+import DeleteTask from '../../components/task/delete.component';
 import Task from '../../components/task/task.component';
 import useProject from '../../hooks/project.hook';
 
@@ -79,6 +80,7 @@ const Project = () => {
       </div>
 
       <ModalTask />
+      <DeleteTask />
     </>
   );
 };

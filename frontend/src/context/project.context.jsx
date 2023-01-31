@@ -9,7 +9,8 @@ const ProjectProvider = ({ children }) => {
   const [project, setProject] = useState({});
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [modalTask, setModalTask] = useState(false)
+  const [modalTask, setModalTask] = useState(false);
+  const [deleteTask, setDeleteTask] = useState(false)
   const [task, setTask] = useState({});
   const navigate = useNavigate();
 
@@ -53,13 +54,12 @@ const ProjectProvider = ({ children }) => {
         }
       };
 
-      if(project.id !== '') {
-        await updateProject(project, config)
-      }else {
-       await createProject(project, config)
+      if (project.id !== '') {
+        await updateProject(project, config);
+      } else {
+        await createProject(project, config);
       }
 
-      
       setTimeout(() => {
         setAlert({});
         navigate('/projects');
@@ -79,17 +79,23 @@ const ProjectProvider = ({ children }) => {
       message: 'Proyecto creado correctamente.',
       error: false
     });
-  }
+  };
 
   const updateProject = async (project, config) => {
-    const { data } = await clientAxios.put(`/project/${project.id}`, project, config);
-    const updatedProjects = projects.map(state => state._id === data._id ? data : state);
-    setProjects(updatedProjects)
+    const { data } = await clientAxios.put(
+      `/project/${project.id}`,
+      project,
+      config
+    );
+    const updatedProjects = projects.map((state) =>
+      state._id === data._id ? data : state
+    );
+    setProjects(updatedProjects);
     setAlert({
       message: 'Proyecto actualizado correctamente.',
       error: false
     });
-  }
+  };
 
   const deleteProject = async (id) => {
     try {
@@ -103,13 +109,13 @@ const ProjectProvider = ({ children }) => {
       };
 
       await clientAxios.delete(`/project/${id}`, config);
-      const updatedProjects = projects.filter(state => state._id !== id );
+      const updatedProjects = projects.filter((state) => state._id !== id);
       setProjects(updatedProjects);
       setAlert({
         message: 'Proyecto eliminado correctamente.',
         error: false
       });
-      
+
       setTimeout(() => {
         setAlert({});
         navigate('/projects');
@@ -120,11 +126,11 @@ const ProjectProvider = ({ children }) => {
         error: false
       });
     }
-  }
+  };
 
   const getProject = async (id) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const token = localStorage.getItem('token');
       if (!token) return;
       const config = {
@@ -134,21 +140,21 @@ const ProjectProvider = ({ children }) => {
         }
       };
       const { data } = await clientAxios.get(`/project/${id}`, config);
-      setProject(data)
+      setProject(data);
     } catch (error) {
       setAlert({
         message: error.response.data.message,
         error: false
       });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleModalTask = () => {
-    setModalTask(!modalTask)
-    setTask({})
-  }
+    setModalTask(!modalTask);
+    setTask({});
+  };
 
   const submitTask = async (task) => {
     try {
@@ -161,15 +167,15 @@ const ProjectProvider = ({ children }) => {
         }
       };
 
-      if(task.id !== '') {
-       await updateTask(task, config)
-      }else {
-       await createTask(task, config)
+      if (task.id !== '') {
+        await updateTask(task, config);
+      } else {
+        await createTask(task, config);
       }
-      
+
       setTimeout(() => {
         setAlert({});
-        setModalTask(false)
+        setModalTask(false);
       }, 1000);
     } catch (error) {
       setAlert({
@@ -177,35 +183,61 @@ const ProjectProvider = ({ children }) => {
         error: false
       });
     }
-  }
+  };
 
   const createTask = async (task, config) => {
     const { data } = await clientAxios.post('/task', task, config);
-    const updateProject = { ...project }
-    updateProject.tasks = [...project.tasks, data]
+    const updateProject = { ...project };
+    updateProject.tasks = [...project.tasks, data];
     setProject(updateProject);
     setAlert({
       message: 'Tarea creado correctamente.',
       error: false
     });
-  }
+  };
 
   const updateTask = async (task, config) => {
-    const { data } = await clientAxios.put(`/task/${project.id}`, task, config);
+    const { data } = await clientAxios.put(`/task/${task.id}`, task, config);
+    const updateProject = { ...project };
+    updateProject.tasks = updateProject.tasks.map((state) =>
+      state._id === data._id ? data : state
+    );
+    setProject(updatedProjects);
     setAlert({
-      message: 'Tarea actualizada correctamente.',
+      message: 'Tarea actualizado correctamente.',
       error: false
     });
+  };
+
+  const handleUpdateTask = async (task) => {
+    setTask(task);
+    setModalTask(true);
+  };
+
+  const handleDeleteTask = async (task) => {
+    setTask(task);
+    setDeleteTask(!deleteTask)
   }
 
-  const handleUpdateTask = async task => {
-    setTask(task)
-    setModalTask(true)
-  }
-  
   return (
     <ProjectContext.Provider
-      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject, modalTask, handleModalTask, submitTask, handleUpdateTask, task }}
+      value={{
+        projects,
+        project,
+        alert,
+        loading,
+        showAlert,
+        submitProject,
+        getProject,
+        deleteProject,
+        modalTask,
+        handleModalTask,
+        submitTask,
+        handleUpdateTask,
+        task,
+        deleteTask,
+        handleDeleteTask
+      }}
     >
       {children}
     </ProjectContext.Provider>

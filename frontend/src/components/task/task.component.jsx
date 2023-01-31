@@ -3,7 +3,7 @@ import useProject from "../../hooks/project.hook";
 
 const Task = ({task}) => {
 
-  const { handleUpdateTask } = useProject();
+  const { handleUpdateTask, handleDeleteTask } = useProject();
 
   const { _id, name, description, priority, delivery, status } = task;
 
@@ -20,7 +20,7 @@ const Task = ({task}) => {
       <div className="flex gap-2">
         <button className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg" onClick={() => handleUpdateTask(task)}>Editar</button>
         {status ? (<button className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">Completa</button>) : (<button className="bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">Incompleta</button>)}
-        <button className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">Eliminar</button>
+        <button className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg" onClick={() => handleDeleteTask(task)}>Eliminar</button>
       </div>
 
     </div>
