@@ -4,11 +4,12 @@ import ModalTask from '../../components/task/modal.component';
 import DeleteTask from '../../components/task/delete.component';
 import Task from '../../components/task/task.component';
 import useProject from '../../hooks/project.hook';
+import Alert from '../../components/alert.component';
 
 const Project = () => {
   const params = useParams();
 
-  const { getProject, project, loading, handleModalTask } = useProject();
+  const { getProject, project, loading, handleModalTask, alert } = useProject();
 
   useEffect(() => {
     getProject(params.id);
@@ -69,6 +70,7 @@ const Project = () => {
       </button>
 
       <p className="font-bold text-xl mt-10">Tareas del proyecto</p>
+      {alert.message && <Alert alert={alert} />}
       <div className="bg-white shadow mt-10 rounded-lg">
         {project.tasks?.length ? (
           project.tasks?.map((task) => <Task key={task._id} task={task} />)

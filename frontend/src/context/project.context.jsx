@@ -10,7 +10,7 @@ const ProjectProvider = ({ children }) => {
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalTask, setModalTask] = useState(false);
-  const [deleteTask, setDeleteTask] = useState(false)
+  const [deleteTask, setDeleteTask] = useState(false);
   const [task, setTask] = useState({});
   const navigate = useNavigate();
 
@@ -216,8 +216,43 @@ const ProjectProvider = ({ children }) => {
 
   const handleDeleteTask = async (task) => {
     setTask(task);
-    setDeleteTask(!deleteTask)
-  }
+    setDeleteTask(!deleteTask);
+  };
+
+  const removeTask = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      await clientAxios.delete(`/task/${task._id}`, config);
+      const updateProject = { ...project };
+      updateProject.tasks = updateProject.tasks.filter(
+        (state) => state._id !== task._id
+      );
+      setProject(updatedProjects);
+      setAlert({
+        message: 'Tarea eliminado correctamente.',
+        error: false
+      });
+
+      setDeleteTask(false);
+      setTask({});
+      setTimeout(() => {
+        setAlert({});
+      }, 1000);
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: false
+      });
+    }
+  };
 
   return (
     <ProjectContext.Provider
@@ -236,7 +271,8 @@ const ProjectProvider = ({ children }) => {
         handleUpdateTask,
         task,
         deleteTask,
-        handleDeleteTask
+        handleDeleteTask,
+        removeTask
       }}
     >
       {children}
