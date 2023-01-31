@@ -89,7 +89,7 @@ const ProjectProvider = ({ children }) => {
     });
   }
 
-  const deleteProject = async (project) => {
+  const deleteProject = async (id) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -100,8 +100,8 @@ const ProjectProvider = ({ children }) => {
         }
       };
 
-      await clientAxios.delete(`/project/${project._id}`, config);
-      const updatedProjects = projects.filter(state => state._id !== project._id );
+      await clientAxios.delete(`/project/${id}`, config);
+      const updatedProjects = projects.filter(state => state._id !== id );
       setProjects(updatedProjects);
       setAlert({
         message: 'Proyecto eliminado correctamente.',

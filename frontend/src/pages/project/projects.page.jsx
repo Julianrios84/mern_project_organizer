@@ -16,6 +16,7 @@ const Projects = () => {
           <p className="text-center text-gray-600">No hay proyectos aún</p>
         )}
       </div>
+
     </>
   );
 };

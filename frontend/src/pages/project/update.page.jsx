@@ -13,7 +13,7 @@ const UpdateProject = () => {
 
   const handleClick = async () => {
     if(confirm('¿Deseas eliminar este proyecto?')) {
-      await deleteProject(project)
+      await deleteProject(project._id)
     }
   }
 
