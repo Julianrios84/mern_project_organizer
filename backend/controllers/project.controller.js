@@ -84,7 +84,7 @@ const removeProject = async (req, res) => {
       return res.status(401).json({ message: error.message });
     }
 
-    project.deleteOne();
+    await project.deleteOne();
     res.json({ message: 'Projecto eliminado' });
   } catch (error) {
     return res.status(500).json({ message: error.message });
