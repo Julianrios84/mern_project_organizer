@@ -9,6 +9,9 @@ const ProjectProvider = ({ children }) => {
   const [project, setProject] = useState({});
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [modalTask, setModalTask] = useState(false)
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -142,10 +145,14 @@ const ProjectProvider = ({ children }) => {
       setLoading(false)
     }
   }
+
+  const handleModalTask = () => {
+    setModalTask(!modalTask)
+  }
   
   return (
     <ProjectContext.Provider
-      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject }}
+      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject, modalTask, handleModalTask }}
     >
       {children}
     </ProjectContext.Provider>
