@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ModalTask from '../../components/task/modal.component';
+import Task from '../../components/task/task.component';
 import useProject from '../../hooks/project.hook';
 
 const Project = () => {
@@ -66,7 +67,18 @@ const Project = () => {
         Nueva tarea
       </button>
 
-      <ModalTask/>
+      <p className="font-bold text-xl mt-10">Tareas del proyecto</p>
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {project.tasks?.length ? (
+          project.tasks?.map((task) => <Task key={task._id} task={task} />)
+        ) : (
+          <p className="text-center my-5 p-10">
+            No hay tareas en este proyecto.
+          </p>
+        )}
+      </div>
+
+      <ModalTask />
     </>
   );
 };
