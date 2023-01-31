@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ModalTask from '../../components/task/modal.component';
 import useProject from '../../hooks/project.hook';
 
 const Project = () => {
   const params = useParams();
+  const [modal, setModal] = useState(false)
   const { getProject, project, loading } = useProject();
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const Project = () => {
       </div>
       <button
         type="button"
+        onClick={() => setModal(true)}
         className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 text-white text-center mt-5 flex gap-2"
       >
         <svg
@@ -64,7 +66,7 @@ const Project = () => {
         Nueva tarea
       </button>
 
-      <ModalTask />
+      <ModalTask modal={modal} setModal={setModal} />
     </>
   );
 };
