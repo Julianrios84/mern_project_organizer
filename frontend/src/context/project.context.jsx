@@ -149,10 +149,14 @@ const ProjectProvider = ({ children }) => {
   const handleModalTask = () => {
     setModalTask(!modalTask)
   }
+
+  const submitTask = async (task) => {
+    console.log("🚀 ~ file: project.context.jsx:154 ~ submitTask ~ task", task)
+  }
   
   return (
     <ProjectContext.Provider
-      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject, modalTask, handleModalTask }}
+      value={{ projects, project, alert, loading, showAlert, submitProject, getProject, deleteProject, modalTask, handleModalTask, submitTask }}
     >
       {children}
     </ProjectContext.Provider>

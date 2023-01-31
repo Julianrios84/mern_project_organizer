@@ -1,6 +1,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import useProject from '../../hooks/project.hook';
+import Alert from '../alert.component';
 
 const Priorities = [
   {
@@ -23,11 +24,25 @@ const ModalTask = () => {
     description: '',
     priority: ''
   });
-  const { modalTask, handleModalTask } = useProject();
+  const { modalTask, handleModalTask, showAlert, alert, submitTask } = useProject();
 
   const handleChange = (e) => {
-    setTask({ ...project, [e.target.name]: e.target.value });
+    setTask({ ...task, [e.target.name]: e.target.value });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if([task.name, task.description, task.project].includes('')) {
+      showAlert({
+        message: 'Todos los campos son obligatorios',
+        error: true
+      })
+      return;
+    }
+
+    await submitTask(task)
+  }
 
   return (
     <Transition.Root show={modalTask} as={Fragment}>
@@ -98,7 +113,9 @@ const ModalTask = () => {
                     Crear tarea
                   </Dialog.Title>
 
-                  <form className="my-10">
+                  {alert.message && <Alert alert={alert} />}
+
+                  <form className="my-10" onSubmit={handleSubmit}>
                     <div className="mb-5">
                       <label
                         htmlFor="name"
