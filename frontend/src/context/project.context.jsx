@@ -151,7 +151,41 @@ const ProjectProvider = ({ children }) => {
   }
 
   const submitTask = async (task) => {
-    console.log("🚀 ~ file: project.context.jsx:154 ~ submitTask ~ task", task)
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      if(task.id !== '') {
+        // await updateProject(project, config)
+      }else {
+       await createTask(task, config)
+      }
+      
+      setTimeout(() => {
+        setAlert({});
+        modalTask(false)
+      }, 1000);
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: false
+      });
+    }
+  }
+
+  const createTask = async (task, config) => {
+    const { data } = await clientAxios.post('/tassk', task, config);
+    // setProjects([...projects, data]);
+    setAlert({
+      message: 'Tarea creado correctamente.',
+      error: false
+    });
   }
   
   return (

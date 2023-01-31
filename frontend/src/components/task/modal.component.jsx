@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import useProject from '../../hooks/project.hook';
 import Alert from '../alert.component';
+import { useParams } from 'react-router-dom';
 
 const Priorities = [
   {
@@ -22,8 +23,12 @@ const ModalTask = () => {
   const [task, setTask] = useState({
     name: '',
     description: '',
-    priority: ''
-  });
+    priority: '',
+    delivery: '',
+    project: ''
+  }); 
+
+  const params = useParams()
   const { modalTask, handleModalTask, showAlert, alert, submitTask } = useProject();
 
   const handleChange = (e) => {
@@ -33,7 +38,7 @@ const ModalTask = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if([task.name, task.description, task.project].includes('')) {
+    if([task.name, task.description, task.priority, task.delivery].includes('')) {
       showAlert({
         message: 'Todos los campos son obligatorios',
         error: true
@@ -41,6 +46,7 @@ const ModalTask = () => {
       return;
     }
 
+    task.project = params.id;
     await submitTask(task)
   }
 
@@ -148,6 +154,23 @@ const ModalTask = () => {
                         placeholder="Nombre de la tarea"
                         className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                         value={task.description}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                    <div className="mb-5">
+                      <label
+                        htmlFor="delivery"
+                        className="text-gray-700 font-bold text-sm"
+                      >
+                        Entrega tarea
+                      </label>
+                      <input
+                        id="delivery"
+                        type="date"
+                        name="delivery"
+                        placeholder="Nombre de la tarea"
+                        className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={task.delivery}
                         onChange={(e) => handleChange(e)}
                       />
                     </div>
