@@ -15,7 +15,7 @@ const AddCollaborator = () => {
 
   return (
     <>
-      <h1 className='text-4xl font-black'>Añadir colaborador(a) al proyecto: {project.name}</h1>
+      <h1 className='text-4xl font-black text-center'>Añadir colaborador(a) al proyecto: {project.name}</h1>
 
       <div className='mt-10 flex justify-center'>
         <FormCollaborator />

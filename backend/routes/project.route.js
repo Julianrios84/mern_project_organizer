@@ -6,8 +6,9 @@ import {
   getProject,
   updateProject,
   removeProject,
-  addCollaboration,
-  removeCollaboration
+  searchCollaborators,
+  addCollaborator,
+  removeCollaborator
 } from '../controllers/project.controller.js';
 
 import checkAuth from '../middlewares/check.auth.middleware.js';
@@ -22,9 +23,11 @@ router
   .put(checkAuth, updateProject)
   .delete(checkAuth, removeProject);
 
+router.post('/collaborator', checkAuth, searchCollaborators);
+
 router
-  .route('/collaboration/:id')
-  .post(checkAuth, addCollaboration)
-  .delete(checkAuth, removeCollaboration);
+  .route('/collaborator/:id')
+  .post(checkAuth, addCollaborator)
+  .delete(checkAuth, removeCollaborator);
 
 export default router;

@@ -1,9 +1,12 @@
 import Project from '../models/project.model.js';
-import Task from '../models/task.model.js';
+import User from '../models/user.model.js';
 
 const getProjects = async (req, res) => {
   try {
-    let projects = await Project.find().where('creator').equals(req.user).select('-tasks')
+    let projects = await Project.find()
+      .where('creator')
+      .equals(req.user)
+      .select('-tasks');
     res.json(projects);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -24,7 +27,7 @@ const createProject = async (req, res) => {
 const getProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findById(id).populate('tasks')
+    const project = await Project.findById(id).populate('tasks');
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');
@@ -45,7 +48,7 @@ const getProject = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findById(id)
+    const project = await Project.findById(id);
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');
@@ -72,7 +75,7 @@ const updateProject = async (req, res) => {
 const removeProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findById(id)
+    const project = await Project.findById(id);
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');
@@ -91,10 +94,20 @@ const removeProject = async (req, res) => {
   }
 };
 
-const addCollaboration = async (req, res) => {};
+const searchCollaborators = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email }).select('-confirm -createdAt -updatedAt -password -token -__v');
 
-const removeCollaboration = async (req, res) => {};
+  if (!user) {
+    const error = new Error('Usuario no encontrado');
+    return res.status(404).json({ message: error.message });
+  }
+  res.json(user);
+};
 
+const addCollaborator = async (req, res) => {};
+
+const removeCollaborator = async (req, res) => {};
 
 export {
   getProjects,
@@ -102,6 +115,7 @@ export {
   getProject,
   updateProject,
   removeProject,
-  addCollaboration,
-  removeCollaboration,
+  searchCollaborators,
+  addCollaborator,
+  removeCollaborator
 };
