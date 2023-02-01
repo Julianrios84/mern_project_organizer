@@ -6,6 +6,7 @@ import Task from '../../components/task/task.component';
 import useProject from '../../hooks/project.hook';
 import Alert from '../../components/alert.component';
 import Collaborator from '../../components/collaborator/collaborator.component';
+import DeleteCollaborator from '../../components/collaborator/delete.component';
 
 const Project = () => {
   const params = useParams();
@@ -104,6 +105,7 @@ const Project = () => {
 
       <ModalTask />
       <DeleteTask />
+      <DeleteCollaborator />
     </>
   );
 };

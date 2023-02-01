@@ -13,6 +13,7 @@ const ProjectProvider = ({ children }) => {
   const [deleteTask, setDeleteTask] = useState(false);
   const [task, setTask] = useState({});
   const [collaborator, setCollaborator] = useState({});
+  const [deleteCollaborator, setDeleteCollaborator] = useState(false);
 
   const navigate = useNavigate();
 
@@ -323,6 +324,16 @@ const ProjectProvider = ({ children }) => {
     
   }
 
+  const handleDeleteCollaborator = async (collaborator) => {
+    setCollaborator(collaborator)
+    setDeleteCollaborator(!deleteCollaborator);
+  };
+
+  const removeCollaborator = async () => {
+    
+  }
+
+
   return (
     <ProjectContext.Provider
       value={{
@@ -344,7 +355,9 @@ const ProjectProvider = ({ children }) => {
         removeTask,
         submitCollaborator,
         collaborator,
-        addCollaborator
+        addCollaborator,
+        handleDeleteCollaborator,
+        deleteCollaborator
       }}
     >
       {children}
