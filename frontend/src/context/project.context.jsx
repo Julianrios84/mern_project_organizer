@@ -330,7 +330,42 @@ const ProjectProvider = ({ children }) => {
   };
 
   const removeCollaborator = async () => {
-    
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      const { data } = await clientAxios.post(
+        `project/collaborator/delete/${project._id}`,
+        { id: collaborator._id },
+        config
+      );
+
+      const updateProject = {...project };
+      updateProject.collaborators = updateProject.collaborators.filter(state => state._id !== collaborator._id)
+      setProject(updateProject)
+
+      setAlert({
+        message: data.message,
+        error: false
+      });
+      setCollaborator({})
+      setDeleteCollaborator(false);
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: true
+      });
+    } finally {
+      setTimeout(() => {
+        setAlert({});
+      }, 1500);
+    }
   }
 
 
@@ -357,7 +392,8 @@ const ProjectProvider = ({ children }) => {
         collaborator,
         addCollaborator,
         handleDeleteCollaborator,
-        deleteCollaborator
+        deleteCollaborator,
+        removeCollaborator
       }}
     >
       {children}

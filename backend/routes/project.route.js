@@ -28,6 +28,7 @@ router.post('/collaborator', checkAuth, searchCollaborators);
 router
   .route('/collaborator/:id')
   .post(checkAuth, addCollaborator)
-  .delete(checkAuth, removeCollaborator);
+  
+router.post('/collaborator/delete/:id', checkAuth, removeCollaborator);
 
 export default router;
