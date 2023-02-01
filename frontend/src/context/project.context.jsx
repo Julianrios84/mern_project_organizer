@@ -202,7 +202,7 @@ const ProjectProvider = ({ children }) => {
     updateProject.tasks = updateProject.tasks.map((state) =>
       state._id === data._id ? data : state
     );
-    setProject(updatedProjects);
+    setProject(updateProject);
     setAlert({
       message: 'Tarea actualizado correctamente.',
       error: false
@@ -231,16 +231,17 @@ const ProjectProvider = ({ children }) => {
       };
 
       await clientAxios.delete(`/task/${task._id}`, config);
-      const updateProject = { ...project };
-      updateProject.tasks = updateProject.tasks.filter(
-        (state) => state._id !== task._id
-      );
-      setProject(updatedProjects);
+
       setAlert({
         message: 'Tarea eliminado correctamente.',
         error: false
       });
 
+      const updateProject = { ...project };
+      updateProject.tasks = updateProject.tasks.filter(
+        (state) => state._id !== task._id
+      );
+      setProject(updateProject);
       setDeleteTask(false);
       setTask({});
       setTimeout(() => {
@@ -252,6 +253,13 @@ const ProjectProvider = ({ children }) => {
         error: false
       });
     }
+  };
+
+  const submitCollaborator = async (email) => {
+    console.log(
+      '🚀 ~ file: project.context.jsx:260 ~ submitCollaborator ~ email',
+      email
+    );
   };
 
   return (
@@ -272,7 +280,8 @@ const ProjectProvider = ({ children }) => {
         task,
         deleteTask,
         handleDeleteTask,
-        removeTask
+        removeTask,
+        submitCollaborator
       }}
     >
       {children}
