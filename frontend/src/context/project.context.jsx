@@ -287,6 +287,11 @@ const ProjectProvider = ({ children }) => {
     }
   };
 
+  const addCollaborator = async email => {
+    console.log("🚀 ~ file: project.context.jsx:291 ~ addCollaborator ~ email", email)
+    
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -306,7 +311,9 @@ const ProjectProvider = ({ children }) => {
         deleteTask,
         handleDeleteTask,
         removeTask,
-        submitCollaborator
+        submitCollaborator,
+        collaborator,
+        addCollaborator
       }}
     >
       {children}

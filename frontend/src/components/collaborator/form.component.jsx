@@ -5,7 +5,7 @@ import Alert from '../alert.component';
 const FormCollaborator = () => {
   const [email, setEmail] = useState('');
 
-  const { showAlert, alert, submitCollaborator, loading } = useProject()
+  const { showAlert, alert, submitCollaborator } = useProject()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
