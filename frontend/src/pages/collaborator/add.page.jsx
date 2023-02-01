@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Alert from '../../components/alert.component';
 import FormCollaborator from '../../components/collaborator/form.component';
 import useProject from '../../hooks/project.hook';
 
 const AddCollaborator = () => {
   const params = useParams();
-  const { getProject, project, loading, collaborator, addCollaborator } = useProject();
+  const { getProject, project, loading, collaborator, addCollaborator, alert } = useProject();
 
   useEffect(() => {
     getProject(params.id);
   }, []);
 
-  return (
+  return !project._id ? <Alert alert={alert} /> :(
     <>
       <h1 className="text-4xl font-black text-center">
         Añadir colaborador(a) al proyecto: {project.name}
@@ -35,9 +36,7 @@ const AddCollaborator = () => {
                 <button
                   type="button"
                   className="bg-slate-500 px-5 py-2 rounded-lg uppercase text-white font-bold text-sm"
-                  onClick={() => addCollaborator({
-                    email: collaborator.email
-                  })}
+                  onClick={() => addCollaborator(collaborator.email)}
                 >
                   Agregar al proyecto
                 </button>
