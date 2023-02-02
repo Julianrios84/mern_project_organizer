@@ -1,4 +1,3 @@
-import { Promise } from 'mongoose';
 import Project from '../models/project.model.js';
 import Task from '../models/task.model.js';
 
@@ -56,7 +55,7 @@ const updateTask = async (req, res) => {
       const error = new Error('Tarea no encontrada');
       return res.status(404).json({ message: error.message });
     }
-    console.log(task)
+    console.log(task);
     if (task.project.creator.toString() !== req.user._id.toString()) {
       const error = new Error('Acción no válida');
       return res.status(401).json({ message: error.message });
@@ -95,6 +94,32 @@ const removeTask = async (req, res) => {
   }
 };
 
-const changeStatus = async (req, res) => {};
+const changeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const task = await Task.findById(id).populate('project');
+    if (!task) {
+      const error = new Error('Tarea no encontrada');
+      return res.status(404).json({ message: error.message });
+    }
+
+    if (
+      task.project.creator.toString() !== req.user._id.toString() &&
+      !task.collaborators.some(
+        (collaborator) =>
+          collaborator._id.toString() === req.user._id.toString()
+      )
+    ) {
+      const error = new Error('Acción no válida');
+      return res.status(401).json({ message: error.message });
+    }
+
+    task.status = !task.status;
+    await task.save();
+    res.json(task)
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 export { addTask, getTask, updateTask, removeTask, changeStatus };

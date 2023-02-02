@@ -385,8 +385,16 @@ const ProjectProvider = ({ children }) => {
         config
       );
 
+      const updateProject = { ...project };
+      updateProject.tasks = updateProject.tasks.map((state) =>
+        state._id === data._id ? data : state
+      );
+
+      setProject(updateProject)
+      setTask({})
+
       setAlert({
-        message: data.message,
+        message: 'Tarea actualizaca',
         error: false
       });
     } catch (error) {
