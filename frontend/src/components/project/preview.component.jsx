@@ -6,7 +6,7 @@ const PreviewProject = ({project}) => {
   const { auth } = useAuth()
   const { _id, name, client, creator } = project
   return (
-    <div className='border-b p-5 flex justify-between'>
+    <div className='border-b p-5 flex flex-col md:flex-row justify-between'>
       <div className='flex items-center'>
       <div className='flex-1 '>
        <div className='flex justify-between'>
