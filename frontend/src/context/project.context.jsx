@@ -393,10 +393,10 @@ const ProjectProvider = ({ children }) => {
       setProject(updateProject)
       setTask({})
 
-      setAlert({
-        message: 'Tarea actualizaca',
-        error: false
-      });
+      // setAlert({
+      //   message: 'Tarea actualizaca',
+      //   error: false
+      // });
     } catch (error) {
       setAlert({
         message: error.response.data.message,

@@ -1,5 +1,5 @@
-import Project from '../models/project.model.js';
 import Task from '../models/task.model.js';
+import Project from '../models/project.model.js';
 
 const addTask = async (req, res) => {
   try {
@@ -87,7 +87,8 @@ const removeTask = async (req, res) => {
       return res.status(401).json({ message: error.message });
     }
 
-    task.deleteOne();
+    const project = await Project.findById(task.project);
+    await Promise.allSettled([await project.tasks.pull(task._id), await task.deleteOne()])
     res.json({ message: 'Tarea eliminada' });
   } catch (error) {
     return res.status(500).json({ message: error.message });
