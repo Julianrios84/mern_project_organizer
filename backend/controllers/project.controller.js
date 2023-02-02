@@ -38,7 +38,13 @@ const getProject = async (req, res) => {
       return res.status(404).json({ message: error.message });
     }
 
-    if (project.creator.toString() !== req.user._id.toString()) {
+    if (
+      project.creator.toString() !== req.user._id.toString() &&
+      !project.collaborators.some(
+        (collaborator) =>
+          collaborator._id.toString() === req.user._id.toString()
+      )
+    ) {
       const error = new Error('Acción no valida');
       return res.status(401).json({ message: error.message });
     }
