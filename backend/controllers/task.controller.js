@@ -116,8 +116,12 @@ const changeStatus = async (req, res) => {
     }
 
     task.status = !task.status;
+    task.completed = req.user._id;
     await task.save();
-    res.json(task)
+
+    const result = await Task.findById(id).populate('project').populate('completed');
+
+    res.json(result)
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
