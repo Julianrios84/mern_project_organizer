@@ -14,6 +14,7 @@ const ProjectProvider = ({ children }) => {
   const [task, setTask] = useState({});
   const [collaborator, setCollaborator] = useState({});
   const [deleteCollaborator, setDeleteCollaborator] = useState(false);
+  const [seeker, setSeeker] = useState(false);
 
   const navigate = useNavigate();
 
@@ -413,6 +414,10 @@ const ProjectProvider = ({ children }) => {
     }
   };
 
+  const handleSeeker = () => {
+    setSeeker(!seeker)
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -438,7 +443,9 @@ const ProjectProvider = ({ children }) => {
         handleDeleteCollaborator,
         deleteCollaborator,
         removeCollaborator,
-        completedTask
+        completedTask,
+        seeker,
+        handleSeeker
       }}
     >
       {children}
