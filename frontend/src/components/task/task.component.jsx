@@ -3,7 +3,7 @@ import useAdmin from '../../hooks/admin.hook';
 import useProject from '../../hooks/project.hook';
 
 const Task = ({ task }) => {
-  const { handleUpdateTask, handleDeleteTask } = useProject();
+  const { handleUpdateTask, handleDeleteTask, completedTask } = useProject();
   const admin = useAdmin();
 
   const { _id, name, description, priority, delivery, status } = task;
@@ -27,15 +27,12 @@ const Task = ({ task }) => {
           </button>
         )}
 
-        {status ? (
-          <button className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
-            Completa
-          </button>
-        ) : (
-          <button className="bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
-            Incompleta
-          </button>
-        )}
+        <button
+          className={`${status ? 'bg-sky-600' : 'bg-gray-600'} px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
+          onClick={() => completedTask(_id)}
+        >
+          {status ? 'Completa' : 'Incompleta'}
+        </button>
 
         {admin && (
           <button

@@ -288,7 +288,7 @@ const ProjectProvider = ({ children }) => {
     }
   };
 
-  const addCollaborator = async email => {
+  const addCollaborator = async (email) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -301,7 +301,7 @@ const ProjectProvider = ({ children }) => {
 
       const { data } = await clientAxios.post(
         `project/collaborator/${project._id}`,
-        {email},
+        { email },
         config
       );
 
@@ -309,23 +309,21 @@ const ProjectProvider = ({ children }) => {
         message: data.message,
         error: false
       });
-      setCollaborator({})
+      setCollaborator({});
     } catch (error) {
       setAlert({
         message: error.response.data.message,
         error: true
       });
-      
     } finally {
       setTimeout(() => {
         setAlert({});
       }, 1500);
     }
-    
-  }
+  };
 
   const handleDeleteCollaborator = async (collaborator) => {
-    setCollaborator(collaborator)
+    setCollaborator(collaborator);
     setDeleteCollaborator(!deleteCollaborator);
   };
 
@@ -346,15 +344,17 @@ const ProjectProvider = ({ children }) => {
         config
       );
 
-      const updateProject = {...project };
-      updateProject.collaborators = updateProject.collaborators.filter(state => state._id !== collaborator._id)
-      setProject(updateProject)
+      const updateProject = { ...project };
+      updateProject.collaborators = updateProject.collaborators.filter(
+        (state) => state._id !== collaborator._id
+      );
+      setProject(updateProject);
 
       setAlert({
         message: data.message,
         error: false
       });
-      setCollaborator({})
+      setCollaborator({});
       setDeleteCollaborator(false);
     } catch (error) {
       setAlert({
@@ -366,8 +366,40 @@ const ProjectProvider = ({ children }) => {
         setAlert({});
       }, 1500);
     }
-  }
+  };
 
+  const completedTask = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      const { data } = await clientAxios.post(
+        `task/status/${id}`,
+        { id: collaborator._id },
+        config
+      );
+
+      setAlert({
+        message: data.message,
+        error: false
+      });
+    } catch (error) {
+      setAlert({
+        message: error.response.data.message,
+        error: true
+      });
+    } finally {
+      setTimeout(() => {
+        setAlert({});
+      }, 1500);
+    }
+  };
 
   return (
     <ProjectContext.Provider
@@ -393,7 +425,8 @@ const ProjectProvider = ({ children }) => {
         addCollaborator,
         handleDeleteCollaborator,
         deleteCollaborator,
-        removeCollaborator
+        removeCollaborator,
+        completedTask
       }}
     >
       {children}
