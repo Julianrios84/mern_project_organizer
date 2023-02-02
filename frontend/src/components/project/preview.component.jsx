@@ -1,10 +1,13 @@
 
 import { Link } from 'react-router-dom'
+import useAuth from '../../hooks/auth.hook'
 
 const PreviewProject = ({project}) => {
-  const { _id, name, client } = project
+  const { auth } = useAuth()
+  const { _id, name, client, creator } = project
   return (
-    <div className='border-b p-5 flex'>
+    <div className='border-b p-5 flex justify-between'>
+      <div className='flex items-center'>
       <div className='flex-1 '>
        <div className='flex justify-between'>
         <p className='font-sansita'> {name}</p>
@@ -12,6 +15,11 @@ const PreviewProject = ({project}) => {
           Cliente  {client}
           </span>
        </div>
+      </div>
+
+      {auth._id !== creator && (
+        <p className='p-1 text-sm rounded-lg text-white bg-green-500 font-bold'>Colaborador</p>
+      ) } 
       </div>
      
       <Link to={`${_id}`} className='flextext-gray-600 w-40 hover:text-gray-800 uppercase text-sm text-end font-bold'>
