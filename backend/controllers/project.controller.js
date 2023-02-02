@@ -3,10 +3,12 @@ import User from '../models/user.model.js';
 
 const getProjects = async (req, res) => {
   try {
-    let projects = await Project.find()
-      .where('creator')
-      .equals(req.user)
-      .select('-tasks');
+    let projects = await Project.find({
+      $or: [
+        { collaborators: { $in: req.user } },
+        { creator: { $in: req.user } }
+      ]
+    }).select('-tasks');
     res.json(projects);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -27,7 +29,9 @@ const createProject = async (req, res) => {
 const getProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findOne({ _id: id }).populate('tasks').populate('collaborators', "name email");
+    const project = await Project.findOne({ _id: id })
+      .populate('tasks')
+      .populate('collaborators', 'name email');
 
     if (!project) {
       const error = new Error('Proyecto no encontrado');
@@ -131,24 +135,22 @@ const addCollaborator = async (req, res) => {
     return res.status(404).json({ message: error.message });
   }
 
-  if(project.creator.toString() === user._id.toString()) {
+  if (project.creator.toString() === user._id.toString()) {
     const error = new Error('El creador del proyecto no puede ser colaborador');
     return res.status(404).json({ message: error.message });
   }
 
-  if(project.collaborators.includes(user._id)) {
+  if (project.collaborators.includes(user._id)) {
     const error = new Error('El usuario ya pertenece al proyecto');
     return res.status(404).json({ message: error.message });
   }
 
   project.collaborators.push(user._id);
-  await project.save()
+  await project.save();
 
   res.json({
     message: 'Colaborador agregado correctamente'
-  })
-
-
+  });
 };
 
 const removeCollaborator = async (req, res) => {
@@ -167,11 +169,11 @@ const removeCollaborator = async (req, res) => {
   }
 
   project.collaborators.pull(req.body.id);
-  await project.save()
+  await project.save();
 
   res.json({
     message: 'Colaborador eliminado correctamente'
-  })
+  });
 };
 
 export {
