@@ -23,9 +23,7 @@ const Project = () => {
 
   if (loading) return <p className="text-center">Cargando...</p>;
 
-  return alert.message && alert.error ? (
-    <Alert alert={alert} />
-  ) : (
+  return  (
     <>
       <div className="flex justify-between">
         <h1 className="font-black text-4xl font-sansita">{name}</h1>
@@ -80,7 +78,6 @@ const Project = () => {
       )}
 
       <p className="font-bold text-xl mt-10">Tareas del proyecto</p>
-      {alert.message && <Alert alert={alert} />}
       <div className="bg-white shadow mt-10 rounded-lg">
         {project.tasks?.length ? (
           project.tasks?.map((task) => <Task key={task._id} task={task} />)
