@@ -38,8 +38,24 @@ app.use('/api/user', userRoutes)
 app.use('/api/project', projectRoutes)
 app.use('/api/task', taskRoutes)
 
-app.listen(port, () => {
+const listen = app.listen(port, () => {
   console.log(`Server running in port ${port}`)
 })
 
 
+// Server Socket.io
+import { Server } from 'socket.io'
+
+const io = new Server(listen, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.FRONTEND_URL
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log('Conectado a socket.io')
+
+  // Definir los eventos de socket
+  
+})
