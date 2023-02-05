@@ -1,11 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useAuth from '../hooks/auth.hook';
 import useProject from '../hooks/project.hook'
 import Search from './search.component';
 
 const Header = () => {
 
-  const { handleSeeker } = useProject()
+  const { signOffAuth } = useAuth()
+  const { handleSeeker, signOffProject } = useProject()
+
+  const handleSignOff = async() => {
+    signOffProject();
+    signOffAuth();
+    localStorage.removeItem('token');
+  }
 
   return (
     <header className="px-4 py-5 bg-white border-b">
@@ -27,6 +35,7 @@ const Header = () => {
           <button
             className="text-white text-sm bg-sky-600 p-3 rounded-md uppercase"
             type="button"
+            onClick={handleSignOff}
           >
             Cerrar Sesión
           </button>

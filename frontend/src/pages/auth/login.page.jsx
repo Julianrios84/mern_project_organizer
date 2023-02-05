@@ -40,7 +40,8 @@ const Login = () => {
       setAuth(data);
       setUser({ email: '', password: '' });
       if(location.pathname === '/') {
-        location.href = '/projects';
+        navigate('/projects')
+        // location.href = '/projects';
       }
     } catch (error) {
       setAlert({
