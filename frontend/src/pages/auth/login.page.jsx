@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import clientAxios from '../../config/axios.config';
 import Alert from '../../components/alert.component';
 import useAuth from '../../hooks/auth.hook';
@@ -9,6 +9,8 @@ const Login = () => {
 
   const [alert, setAlert] = useState({});
   const [user, setUser] = useState({ email: '', password: '' });
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -37,6 +39,9 @@ const Login = () => {
       localStorage.setItem('token', data.token);
       setAuth(data);
       setUser({ email: '', password: '' });
+      if(location.pathname === '/') {
+        location.href = '/projects';
+      }
     } catch (error) {
       setAlert({
         message: error.response.data.message,

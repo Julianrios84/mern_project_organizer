@@ -1,29 +1,73 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import io from 'socket.io-client';
+
 import useProject from '../../hooks/project.hook';
 import useAdmin from '../../hooks/admin.hook';
 import ModalTask from '../../components/task/modal.component';
 import DeleteTask from '../../components/task/delete.component';
 import Task from '../../components/task/task.component';
-import Alert from '../../components/alert.component';
 import Collaborator from '../../components/collaborator/collaborator.component';
 import DeleteCollaborator from '../../components/collaborator/delete.component';
+
+let socket;
 
 const Project = () => {
   const params = useParams();
 
-  const { getProject, project, loading, handleModalTask, alert } = useProject();
+  const {
+    getProject,
+    project,
+    loading,
+    handleModalTask,
+    socketAddTasksProject,
+    socketRemoveTaskProject,
+    socketUpdateTaskProject,
+    socketCompletedTaskProject
+  } = useProject();
   const admin = useAdmin();
 
   useEffect(() => {
     getProject(params.id);
   }, []);
 
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+    socket.emit('open project', params.id);
+  }, []);
+
+  useEffect(() => {
+    socket.on('added task', (task) => {
+      if (task.project === project._id) {
+        socketAddTasksProject(task);
+      }
+    });
+
+    socket.on('deleted task', (task) => {
+      const projectId = task.project.hasOwnProperty('_id') ? task.project._id : task.project;
+      if (projectId === project._id) {
+        socketRemoveTaskProject(task);
+      }
+    });
+
+    socket.on('updated task', (task) => {
+      if (task.project._id === project._id) {
+        socketUpdateTaskProject(task);
+      }
+    });
+
+    socket.on('task done', (task) => {
+      if (task.project._id === project._id) {
+        socketCompletedTaskProject(task);
+      }
+    });
+  });
+
   const { name } = project;
 
   if (loading) return <p className="text-center">Cargando...</p>;
 
-  return  (
+  return (
     <>
       <div className="flex justify-between">
         <h1 className="font-black text-4xl font-sansita">{name}</h1>

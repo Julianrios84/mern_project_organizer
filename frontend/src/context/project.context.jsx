@@ -1,7 +1,9 @@
 import { useState, useEffect, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clientAxios from '../config/axios.config';
+import io from 'socket.io-client';
 
+let socket;
 const ProjectContext = createContext();
 
 const ProjectProvider = ({ children }) => {
@@ -38,6 +40,10 @@ const ProjectProvider = ({ children }) => {
       }
     };
     getProjects();
+  }, []);
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
   }, []);
 
   const showAlert = (data) => {
@@ -146,7 +152,7 @@ const ProjectProvider = ({ children }) => {
       const { data } = await clientAxios.get(`/project/${id}`, config);
       setProject(data);
     } catch (error) {
-      navigate('/projects')
+      navigate('/projects');
       setAlert({
         message: error.response.data.message,
         error: true
@@ -195,22 +201,16 @@ const ProjectProvider = ({ children }) => {
 
   const createTask = async (task, config) => {
     const { data } = await clientAxios.post('/task', task, config);
-    const updateProject = { ...project };
-    updateProject.tasks = [...project.tasks, data];
-    setProject(updateProject);
     setAlert({
       message: 'Tarea creado correctamente.',
       error: false
     });
+    socket.emit('create task', data);
   };
 
   const updateTask = async (task, config) => {
     const { data } = await clientAxios.put(`/task/${task.id}`, task, config);
-    const updateProject = { ...project };
-    updateProject.tasks = updateProject.tasks.map((state) =>
-      state._id === data._id ? data : state
-    );
-    setProject(updateProject);
+    socket.emit('update task', data);
     setAlert({
       message: 'Tarea actualizado correctamente.',
       error: false
@@ -239,17 +239,12 @@ const ProjectProvider = ({ children }) => {
       };
 
       await clientAxios.delete(`/task/${task._id}`, config);
+      socket.emit('remove task', task);
 
       setAlert({
         message: 'Tarea eliminado correctamente.',
         error: false
       });
-
-      const updateProject = { ...project };
-      updateProject.tasks = updateProject.tasks.filter(
-        (state) => state._id !== task._id
-      );
-      setProject(updateProject);
       setDeleteTask(false);
       setTask({});
       setTimeout(() => {
@@ -390,13 +385,9 @@ const ProjectProvider = ({ children }) => {
         config
       );
 
-      const updateProject = { ...project };
-      updateProject.tasks = updateProject.tasks.map((state) =>
-        state._id === data._id ? data : state
-      );
-
-      setProject(updateProject)
-      setTask({})
+      socket.emit('completed task', data);
+      
+      setTask({});
 
       // setAlert({
       //   message: 'Tarea actualizaca',
@@ -415,8 +406,40 @@ const ProjectProvider = ({ children }) => {
   };
 
   const handleSeeker = () => {
-    setSeeker(!seeker)
-  }
+    setSeeker(!seeker);
+  };
+
+  // Socket io
+
+  const socketAddTasksProject = (task) => {
+    const updateProject = { ...project };
+    updateProject.tasks = [...updateProject.tasks, task];
+    setProject(updateProject);
+  };
+
+  const socketRemoveTaskProject = (task) => {
+    const updateProject = { ...project };
+    updateProject.tasks = updateProject.tasks.filter(
+      (state) => state._id !== task._id
+    );
+    setProject(updateProject);
+  };
+
+  const socketUpdateTaskProject = (task) => {
+    const updateProject = { ...project };
+    updateProject.tasks = updateProject.tasks.map((state) =>
+      state._id === task._id ? task : state
+    );
+    setProject(updateProject);
+  };
+
+  const socketCompletedTaskProject = (task) => {
+    const updateProject = { ...project };
+    updateProject.tasks = updateProject.tasks.map((state) =>
+      state._id === task._id ? task : state
+    );
+    setProject(updateProject);
+  };
 
   return (
     <ProjectContext.Provider
@@ -445,7 +468,11 @@ const ProjectProvider = ({ children }) => {
         removeCollaborator,
         completedTask,
         seeker,
-        handleSeeker
+        handleSeeker,
+        socketAddTasksProject,
+        socketRemoveTaskProject,
+        socketUpdateTaskProject,
+        socketCompletedTaskProject
       }}
     >
       {children}

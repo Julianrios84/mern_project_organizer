@@ -55,7 +55,6 @@ const updateTask = async (req, res) => {
       const error = new Error('Tarea no encontrada');
       return res.status(404).json({ message: error.message });
     }
-    console.log(task);
     if (task.project.creator.toString() !== req.user._id.toString()) {
       const error = new Error('Acción no válida');
       return res.status(401).json({ message: error.message });
@@ -99,14 +98,16 @@ const changeStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const task = await Task.findById(id).populate('project');
+   
     if (!task) {
       const error = new Error('Tarea no encontrada');
       return res.status(404).json({ message: error.message });
     }
 
+
     if (
       task.project.creator.toString() !== req.user._id.toString() &&
-      !task.collaborators.some(
+      !task.project.collaborators.some(
         (collaborator) =>
           collaborator._id.toString() === req.user._id.toString()
       )
@@ -114,6 +115,7 @@ const changeStatus = async (req, res) => {
       const error = new Error('Acción no válida');
       return res.status(401).json({ message: error.message });
     }
+
 
     task.status = !task.status;
     task.completed = req.user._id;

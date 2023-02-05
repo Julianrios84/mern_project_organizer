@@ -8,8 +8,8 @@ function classNames(...classes) {
 }
 
 const Search = () => {
+  const {seeker, handleSeeker, projects} = useProject();
   const [search, setSearch] = useState('');
-  const [seeker, handleSeeker, projects] = useProject();
 
   const navigate = useNavigate()
 
